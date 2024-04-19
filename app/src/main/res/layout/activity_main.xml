@@ -229,7 +229,7 @@
             app:layout_constraintWidth_percent="0.10"
             app:layout_constraintVertical_bias="0.31"
             app:layout_constraintHorizontal_bias="0.22"
-            />
+            android:contentDescription="TODO" />
 
 
         <ImageView
@@ -304,7 +304,7 @@
             app:layout_constraintWidth_percent="0.7"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintVertical_bias="4"
-            />
+            android:contentDescription="TODO" />
         <ImageView
             android:id="@+id/owl_1"
             android:layout_width="0dp"

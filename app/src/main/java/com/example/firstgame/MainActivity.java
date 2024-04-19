@@ -14,7 +14,15 @@ public class MainActivity extends AppCompatActivity {
     ImageView iv_star1,iv_star2,iv_star3,iv_star4,iv_star5;
     ImageView iv_boardOne,iv_boardTwo;
 
-    private int first_num,second_num;
+//    ImageView iv_wrong,iv_right;
+
+    ImageView iv_numberOne_answer,iv_numberTwo_answer;
+
+    private int first_num,second_num,userAnswer;
+
+    private int selected_option=1;
+
+    boolean result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         iv_star4 = findViewById(R.id.iv_star4_body4);
         iv_star5 = findViewById(R.id.iv_star5_body5);
 
+        iv_numberOne_answer=findViewById(R.id.number_1_checkbox);
+        iv_numberTwo_answer=findViewById(R.id.number_2_checkbox);
 
 
         do {
@@ -44,6 +54,29 @@ public class MainActivity extends AppCompatActivity {
 
         setNumberImage(first_num,iv_numberOne);
         setNumberImage(second_num,iv_numberTwo);
+
+        initializeStarsAnswers();
+
+        iv_numberOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userAnswer = first_num;
+
+            }
+        });
+
+        iv_numberTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userAnswer = second_num;
+            }
+        });
+
+        result=checkUserWin(userAnswer);
+        if(userAnswer == first_num)
+            performImageOne();
+        else
+            performImageTwo();
 
 
     }
@@ -71,12 +104,56 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    public void initializeStars(){
+    public void initializeStarsAnswers(){
         iv_star1.setVisibility(View.INVISIBLE);
         iv_star2.setVisibility(View.INVISIBLE);
         iv_star3.setVisibility(View.INVISIBLE);
         iv_star4.setVisibility(View.INVISIBLE);
         iv_star5.setVisibility(View.INVISIBLE);
+
+        iv_numberOne_answer.setVisibility(View.INVISIBLE);
+        iv_numberTwo_answer.setVisibility(View.INVISIBLE);
+
+    }
+
+    public boolean checkUserWin(int userAnswer){
+        int otherOption;
+        boolean result=false;
+        if(userAnswer == first_num)
+            otherOption = second_num;
+        else
+            otherOption = first_num;
+        if(userAnswer > otherOption)
+            result = true;
+
+        return result;
+    }
+
+    public void performImageOne(){
+        iv_numberOne_answer.setVisibility(View.VISIBLE);
+        iv_numberTwo_answer.setVisibility(View.VISIBLE);
+        if(result){
+            iv_numberOne_answer.setImageResource(R.drawable.tick_mark);
+            iv_numberTwo_answer.setImageResource(R.drawable.cross);
+
+        }
+        else
+            iv_numberOne_answer.setImageResource(R.drawable.cross);
+            iv_numberTwo_answer.setImageResource(R.drawable.tick_mark);
+
+    }
+
+    public void performImageTwo(){
+        iv_numberTwo_answer.setVisibility(View.VISIBLE);
+        iv_numberOne_answer.setVisibility(View.VISIBLE);
+        if(result){
+            iv_numberTwo_answer.setImageResource(R.drawable.tick_mark);
+            iv_numberOne_answer.setImageResource(R.drawable.cross);
+        }
+        else
+            iv_numberTwo_answer.setImageResource(R.drawable.cross);
+            iv_numberOne_answer.setImageResource(R.drawable.tick_mark);
+
     }
 
 }

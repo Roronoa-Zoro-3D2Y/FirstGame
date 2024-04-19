@@ -8,4 +8,7 @@
     <string name="stone">stone</string>
     <string name="star">Star</string>
 
+    <string name="won">You Have Won</string>
+    <string name="restart">Next</string>
+
 </resources>
