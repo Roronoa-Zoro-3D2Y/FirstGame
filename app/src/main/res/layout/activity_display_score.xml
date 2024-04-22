@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="@dimen/_500sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:background="@drawable/a_game_bg2"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/score_board_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="casual"
+            android:text="@string/score_board_heading"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textSize="@dimen/_30sdp"
+            android:background="@color/dialog_heading_bg"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/star_holder"
+            android:layout_width="@dimen/_400sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/score_board_heading"
+            app:layout_constraintWidth="match_parent"
+            android:background="@color/star_holder_bg"
+            >
+
+            <ImageView
+                android:id="@+id/star_1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/gray_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/star_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.19" />
+
+            <ImageView
+                android:id="@+id/star_2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/gray_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/star_1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.19" />
+
+            <ImageView
+                android:id="@+id/star_3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/gray_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/star_2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.19" />
+
+            <ImageView
+                android:id="@+id/star_4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/gray_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/star_3"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.19" />
+
+            <ImageView
+                android:id="@+id/star_5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/gray_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/star_4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.19" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/restart_btn"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/baseline_play_circle_24"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/btn_bg"
+            />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

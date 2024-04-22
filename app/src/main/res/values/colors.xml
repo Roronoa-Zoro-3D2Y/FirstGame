@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dialog_bg">#FFC8D4</color>
+
+    <color name="dialog_heading_bg">#F5E5DB</color>
+    <color name="star_holder_bg">#DCFAFB</color>
+    <color name="btn_bg">#ACF4B4</color>
 </resources>

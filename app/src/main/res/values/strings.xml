@@ -11,4 +11,9 @@
     <string name="won">You Have Won</string>
     <string name="restart">Next</string>
 
+    <string name="trophy">trophy</string>
+    <string name="replay">replay</string>
+
+    <string name="score_board_heading">Score Board</string>
+
 </resources>
