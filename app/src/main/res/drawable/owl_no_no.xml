@@ -3,4 +3,5 @@
 
     <item android:drawable="@drawable/owl_no1" android:duration="200"/>
     <item android:drawable="@drawable/owl_no2" android:duration="200"/>
+    <item android:drawable="@drawable/owl_tap1" android:duration="200"/>
 </animation-list>

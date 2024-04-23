@@ -1,5 +1,6 @@
 package com.example.firstgame;
 
+import static com.example.firstgame.R.id.iv_cat_head;
 import static com.example.firstgame.R.id.iv_star1_body1;
 import static com.example.firstgame.R.id.owl_1;
 
@@ -27,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView iv_numberOne_answer,iv_numberTwo_answer;
 
-    ImageView iv_owl,iv_owl_fly,iv_owl_no;
+    ImageView iv_owl,iv_owl_fly,iv_owl_no,iv_caterpillar;
 
-    AnimationDrawable owl_tapping,owl_flying,owl_shaking;
+    AnimationDrawable owl_tapping,owl_flying,owl_shaking,caterpillar_happy;
 
     AppCompatButton replay_btn;
     ImageView gray_1,gray_2,gray_3,gray_4,gray_5;
@@ -157,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTheStar(int userWins){
-            switch (userWins){
-                case 1:iv_star1.setVisibility(View.VISIBLE)
+        setCaterpillar_happy();
 
-                ;break;
+            switch (userWins){
+                case 1:iv_star1.setVisibility(View.VISIBLE);break;
                 case 2:iv_star2.setVisibility(View.VISIBLE);break;
                 case 3:iv_star3.setVisibility(View.VISIBLE);break;
                 case 4:iv_star4.setVisibility(View.VISIBLE);break;
@@ -203,11 +204,12 @@ public class MainActivity extends AppCompatActivity {
                     countUserWin += 1;
                     setTheStar(countUserWin); //assigning stars per User Win
                     setOwl_tapping();
+
                 }
                 if(userAnswer != correct_Answer)
                 {
-                    owl_tapping.setOneShot(true);
-                    setOwl_no();}
+                    setOwl_no();
+                }
 
 
                 if( countGames <= 5) {
@@ -217,9 +219,10 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             iv_numberOne_answer.setVisibility(View.INVISIBLE);
                             iv_numberTwo_answer.setVisibility(View.INVISIBLE);
-
+                            caterpillar_happy.setOneShot(false);
                             assignNumbers();
                             assignNumbersToImages();
+
                             OnImageClick();
 
                         }
@@ -249,12 +252,13 @@ public class MainActivity extends AppCompatActivity {
                     //counting user wins
                     countUserWin += 1;
                     setTheStar(countUserWin); //assigning stars per User Win
+
                     setOwl_tapping();
                 }
                 if(userAnswer != correct_Answer)
                 {
-                    owl_tapping.setOneShot(true);
-                    setOwl_no();}
+                    setOwl_no();
+                }
 
                 if( countGames <= 5) {
                     Handler myHandler = new Handler();
@@ -263,9 +267,10 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             iv_numberOne_answer.setVisibility(View.INVISIBLE);
                             iv_numberTwo_answer.setVisibility(View.INVISIBLE);
-
+                            caterpillar_happy.setOneShot(false);
                             assignNumbers();
                             assignNumbersToImages();
+
                             OnImageClick();
 
                         }
@@ -351,9 +356,17 @@ public class MainActivity extends AppCompatActivity {
         iv_owl_no = findViewById(owl_1);
         iv_owl_no.setImageResource(R.drawable.owl_no_no);
         owl_shaking = (AnimationDrawable) iv_owl_no.getDrawable();
-
+        owl_shaking.setOneShot(true);
         owl_shaking.start();
 
+    }
+
+    public void setCaterpillar_happy(){
+        iv_caterpillar = findViewById(iv_cat_head);
+        iv_caterpillar.setImageResource(R.drawable.caterpillar_happy);
+        caterpillar_happy = (AnimationDrawable) iv_caterpillar.getDrawable();
+        caterpillar_happy.setOneShot(true);
+        caterpillar_happy.start();
     }
 
 }
