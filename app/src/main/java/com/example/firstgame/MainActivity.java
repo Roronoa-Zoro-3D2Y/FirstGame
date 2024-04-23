@@ -1,5 +1,6 @@
 package com.example.firstgame;
 
+import static android.media.MediaPlayer.create;
 import static com.example.firstgame.R.id.iv_cat_head;
 import static com.example.firstgame.R.id.iv_star1_body1;
 import static com.example.firstgame.R.id.owl_1;
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,6 +20,8 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView iv_numberOne_answer,iv_numberTwo_answer;
 
+    ArrayList<Integer> MySounds = new ArrayList<>();
+
     ImageView iv_owl,iv_owl_fly,iv_owl_no,iv_caterpillar;
 
     AnimationDrawable owl_tapping,owl_flying,owl_shaking,caterpillar_happy;
@@ -39,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     Dialog displayScore;
 
-    private int first_num,second_num,userAnswer,correct_Answer;
+    MediaPlayer wordPop,gameFinishedSound,wrongAnswerSound,correctAnswerSound,theQuestionSound;
+
+
+    private int first_num,second_num,userAnswer,correct_Answer,theActualQuestion;
 
 
     public int countGames = 1,countUserWin=0;
@@ -73,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
 //        Log.d("Testing", "X and y are" + first_num + "  " + second_num);
 
         //return the game to initial stage
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //FIRST GAME
         assignNumbers();
         assignNumbersToImages();
+        theActualQuestion = set_question();
         OnImageClick();
 
 
@@ -102,19 +109,31 @@ public class MainActivity extends AppCompatActivity {
         return x;
     }
 
-    public void setNumberImage(int number,ImageView imageView){
+    int[] mapNumToImageNum = new int[]{R.drawable.num_one,
+            R.drawable.num_two,
+            R.drawable.num_three,
+            R.drawable.num_four,
+            R.drawable.num_five,
+            R.drawable.num_six,
+            R.drawable.num_seven,
+            R.drawable.num_eight,
+            R.drawable.num_nine,
+            R.drawable.num_ten
+    };
+
+    public void setNumberImage(int number, ImageView imageView){
         switch (number){
 
-            case 1: imageView.setImageResource(R.drawable.num_one);break;
-            case 2: imageView.setImageResource(R.drawable.num_two);break;
-            case 3: imageView.setImageResource(R.drawable.num_three);break;
-            case 4: imageView.setImageResource(R.drawable.num_four);break;
-            case 5: imageView.setImageResource(R.drawable.num_five);break;
-            case 6: imageView.setImageResource(R.drawable.num_six);break;
-            case 7: imageView.setImageResource(R.drawable.num_seven);break;
-            case 8: imageView.setImageResource(R.drawable.num_eight);break;
-            case 9: imageView.setImageResource(R.drawable.num_nine);break;
-            case 10:imageView.setImageResource(R.drawable.num_ten);break;
+            case 1: imageView.setImageResource(R.drawable.num_one   );break;
+            case 2: imageView.setImageResource(R.drawable.num_two   );break;
+            case 3: imageView.setImageResource(R.drawable.num_three );break;
+            case 4: imageView.setImageResource(R.drawable.num_four  );break;
+            case 5: imageView.setImageResource(R.drawable.num_five  );break;
+            case 6: imageView.setImageResource(R.drawable.num_six    ) ;break;
+            case 7: imageView.setImageResource(R.drawable.num_seven  ) ;break;
+            case 8: imageView.setImageResource(R.drawable.num_eight  );break;
+            case 9: imageView.setImageResource(R.drawable.num_nine  );break;
+            case 10:imageView.setImageResource(R.drawable.num_ten  );break;
         }
 
     }
@@ -127,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         iv_numberOne_answer.setVisibility(View.INVISIBLE);
         iv_numberTwo_answer.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -148,10 +168,15 @@ public class MainActivity extends AppCompatActivity {
         if(userAnswer != correct_Answer) {
             setOwl_no();
             OnImageClick();
+            wrongAnswerSound = MediaPlayer.create(this,R.raw.not_this_one);
+            wrongAnswerSound.start();
         }
         else {
             iv_numberOne_answer.setVisibility(View.VISIBLE);
             iv_numberTwo_answer.setVisibility(View.VISIBLE);
+
+            correctAnswerSound = MediaPlayer.create(this,R.raw.huhuump3);
+            correctAnswerSound.start();
 
             //owl happy
 
@@ -166,28 +191,27 @@ public class MainActivity extends AppCompatActivity {
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
                         iv_numberOne_answer.setVisibility(View.INVISIBLE);
                         iv_numberTwo_answer.setVisibility(View.INVISIBLE);
                         caterpillar_happy.setOneShot(false);
                         assignNumbers();
                         assignNumbersToImages();
+                        theActualQuestion = set_question();
                         OnImageClick();
 
                     }
-                }, 900);
+                }, 1000);
 
             }// if count of games is within 5
 
             if(countUserWin >= 5) {
                 Log.d("Tag20202","<<--Here2-->>") ;
+                gameFinishedSound = MediaPlayer.create(this,R.raw.clap);
+                gameFinishedSound.start();
                 DisplayScore();
-            }
-
-        }
-
-
-    }
+             }
+        }//else ends
+    }//is User Correct ends
 
 
     public int theBiggestOfTwo(){
@@ -202,6 +226,20 @@ public class MainActivity extends AppCompatActivity {
             iv_numberOne_answer.setImageResource(R.drawable.cross);
         }
         return biggest;
+    }
+    public int theSmallestOfTwo(){
+        int smallest  = second_num;
+        if(first_num < second_num){
+            smallest = first_num;
+            iv_numberOne_answer.setImageResource(R.drawable.tick_mark);
+            iv_numberTwo_answer.setImageResource(R.drawable.cross);
+        }
+        else {
+            iv_numberTwo_answer.setImageResource(R.drawable.tick_mark);
+            iv_numberOne_answer.setImageResource(R.drawable.cross);
+        }
+        return smallest;
+
     }
 
     public void setTheStar(int userWins){
@@ -220,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         countGames += 1;
         do {
             first_num = chooseRandomNumber();
+
             second_num = chooseRandomNumber();
         } while (first_num == second_num);
 
@@ -230,16 +269,36 @@ public class MainActivity extends AppCompatActivity {
         setNumberImage(first_num, iv_numberOne);
         setNumberImage(second_num, iv_numberTwo);
 
+        wordPop = MediaPlayer.create(this,R.raw.wordpop);
+        wordPop.start();
+    }
+    public void getNumAndAssign(){
+        do {
+            first_num = chooseRandomNumber();
 
+            second_num = chooseRandomNumber();
+        } while (first_num == second_num);
+
+        setOwl_tapping();
+        iv_numberOne.setImageResource(mapNumToImageNum[first_num]);
+        iv_numberTwo.setImageResource(mapNumToImageNum[second_num]);
+
+        wordPop = MediaPlayer.create(this,R.raw.wordpop);
+        wordPop.start();
     }
 
-
     public void OnImageClick(){
+
+        iv_numberOne.setClickable(true);
+        iv_numberTwo.setClickable(true);
         iv_numberOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userAnswer = first_num;
-                correct_Answer = theBiggestOfTwo();
+                if((R.raw.which_one_is_bigger) == theActualQuestion)
+                    correct_Answer = theBiggestOfTwo();
+                else
+                    correct_Answer = theSmallestOfTwo();
 
                 //show the option user has clicked only
                 iv_numberOne_answer.setVisibility(View.VISIBLE);
@@ -254,15 +313,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 userAnswer = second_num;
                 correct_Answer = theBiggestOfTwo();
+
+                if((R.raw.which_one_is_bigger)== theActualQuestion)
+                    correct_Answer = theBiggestOfTwo();
+                else
+                    correct_Answer = theSmallestOfTwo();
+
+                iv_numberTwo_answer.setVisibility(View.VISIBLE);
+                isUserCorrect();
+
+
         /*//show correct answer
                 iv_numberOne_answer.setVisibility(View.VISIBLE);
                 iv_numberTwo_answer.setVisibility(View.VISIBLE);*/
 
                 //show only the image user has clicked on
-                iv_numberTwo_answer.setVisibility(View.VISIBLE);
-
-
-                isUserCorrect();
 
             } // onclick
         });// set onclick listener of Image two
@@ -325,6 +390,7 @@ public class MainActivity extends AppCompatActivity {
         initializeStarsAnswers();
         assignNumbers();
         assignNumbersToImages();
+        theActualQuestion = set_question();
         OnImageClick();
     }
 
@@ -364,6 +430,20 @@ public class MainActivity extends AppCompatActivity {
             temp --;
         }
 
+    }
+
+    public int set_question(){
+
+        iv_numberOne.setClickable(false);
+        iv_numberTwo.setClickable(false);
+
+        MySounds.add(R.raw.which_one_is_bigger);
+        MySounds.add(R.raw.which_one_is_smaller);
+
+        Collections.shuffle(MySounds);
+        theQuestionSound = MediaPlayer.create(this,MySounds.get(0));
+        theQuestionSound.start();
+        return MySounds.get(0);
     }
 
 
