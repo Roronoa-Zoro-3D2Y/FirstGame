@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.Dialog;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -45,11 +47,14 @@ public class MainActivity extends AppCompatActivity {
     boolean result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-            //Assigning the IDs
+
+        //Assigning the IDs
             iv_numberOne = findViewById(R.id.number_1);
             iv_numberTwo = findViewById(R.id.number_2);
 
@@ -66,12 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             displayScore = new Dialog(this);
 
-            iv_owl_fly = findViewById(owl_1);
-            iv_owl_fly.setImageResource(R.drawable.owl_flying_in);
-            owl_flying = (AnimationDrawable) iv_owl_fly.getDrawable();
 
-            owl_flying.setOneShot(true);
-            owl_flying.start();
 
 
 
@@ -143,6 +143,53 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    public void isUserCorrect(){
+
+        if(userAnswer != correct_Answer) {
+            setOwl_no();
+            OnImageClick();
+        }
+        else {
+            iv_numberOne_answer.setVisibility(View.VISIBLE);
+            iv_numberTwo_answer.setVisibility(View.VISIBLE);
+
+            //owl happy
+
+            setOwl_flying();
+
+            //set Star
+            countUserWin += 1;
+            setTheStar(countUserWin);
+
+            if( countUserWin < 5) {
+                Handler myHandler = new Handler();
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        iv_numberOne_answer.setVisibility(View.INVISIBLE);
+                        iv_numberTwo_answer.setVisibility(View.INVISIBLE);
+                        caterpillar_happy.setOneShot(false);
+                        assignNumbers();
+                        assignNumbersToImages();
+                        OnImageClick();
+
+                    }
+                }, 900);
+
+            }// if count of games is within 5
+
+            if(countUserWin >= 5) {
+                Log.d("Tag20202","<<--Here2-->>") ;
+                DisplayScore();
+            }
+
+        }
+
+
+    }
+
+
     public int theBiggestOfTwo(){
         int biggest=second_num;
         if(first_num > second_num){
@@ -179,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void assignNumbersToImages(){
         //set the images
-
+        setOwl_tapping();
         setNumberImage(first_num, iv_numberOne);
         setNumberImage(second_num, iv_numberTwo);
 
@@ -194,96 +241,31 @@ public class MainActivity extends AppCompatActivity {
                 userAnswer = first_num;
                 correct_Answer = theBiggestOfTwo();
 
-                //show correct answer
+                //show the option user has clicked only
                 iv_numberOne_answer.setVisibility(View.VISIBLE);
-                iv_numberTwo_answer.setVisibility(View.VISIBLE);
 
-                //check if user win
-                if (userAnswer == correct_Answer) {
-                    //counting user wins
-                    countUserWin += 1;
-                    setTheStar(countUserWin); //assigning stars per User Win
-                    setOwl_tapping();
+                isUserCorrect();
 
-                }
-                if(userAnswer != correct_Answer)
-                {
-                    setOwl_no();
-                }
-
-
-                if( countGames <= 5) {
-                    Handler myHandler = new Handler();
-                    myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv_numberOne_answer.setVisibility(View.INVISIBLE);
-                            iv_numberTwo_answer.setVisibility(View.INVISIBLE);
-                            caterpillar_happy.setOneShot(false);
-                            assignNumbers();
-                            assignNumbersToImages();
-
-                            OnImageClick();
-
-                        }
-                    }, 900);
-
-                }// if count of games is within 5
-
-                if(countGames > 5) {
-                    Log.d("Tag20202","<<--Here1-->>") ;
-                    DisplayScore() ;
-//                    showCustomDialog();
-
-                }
-            }
-        });
+            } // onclick
+        });// set onclick listener of Image one
 
         iv_numberTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userAnswer = second_num;
                 correct_Answer = theBiggestOfTwo();
-
+        /*//show correct answer
                 iv_numberOne_answer.setVisibility(View.VISIBLE);
+                iv_numberTwo_answer.setVisibility(View.VISIBLE);*/
+
+                //show only the image user has clicked on
                 iv_numberTwo_answer.setVisibility(View.VISIBLE);
 
-                if (userAnswer == correct_Answer) {
-                    //counting user wins
-                    countUserWin += 1;
-                    setTheStar(countUserWin); //assigning stars per User Win
 
-                    setOwl_tapping();
-                }
-                if(userAnswer != correct_Answer)
-                {
-                    setOwl_no();
-                }
+                isUserCorrect();
 
-                if( countGames <= 5) {
-                    Handler myHandler = new Handler();
-                    myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            iv_numberOne_answer.setVisibility(View.INVISIBLE);
-                            iv_numberTwo_answer.setVisibility(View.INVISIBLE);
-                            caterpillar_happy.setOneShot(false);
-                            assignNumbers();
-                            assignNumbersToImages();
-
-                            OnImageClick();
-
-                        }
-                    }, 900);
-
-                }// if count of games is within 5
-
-                if(countGames > 5) {
-                    Log.d("Tag20202","<<--Here2-->>") ;
-                    DisplayScore();
-                }
-            }
-        });
+            } // onclick
+        });// set onclick listener of Image two
 
 
     }// onImageClick ENDS HERE
@@ -291,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
     public void DisplayScore() {
 //        Log.d("Tag20202","<<--Here3-->>") ;
         int i = 1;
+
         displayScore = new Dialog(this);
         displayScore.setContentView(R.layout.activity_display_score);
         displayScore.getWindow();
@@ -338,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void restart(){
+        countUserWin = 0;
         initializeStarsAnswers();
         assignNumbers();
         assignNumbersToImages();
@@ -368,5 +352,36 @@ public class MainActivity extends AppCompatActivity {
         caterpillar_happy.setOneShot(true);
         caterpillar_happy.start();
     }
+
+    public void setOwl_flying(){
+        int temp = 5;
+        while(temp != 0) {
+            iv_owl_fly = findViewById(owl_1);
+            iv_owl_fly.setImageResource(R.drawable.owl_flying_in);
+            owl_flying = (AnimationDrawable) iv_owl_fly.getDrawable();
+            owl_flying.setOneShot(true);
+            owl_flying.start();
+            temp --;
+        }
+
+    }
+
+
+/*                if (userAnswer == correct_Answer) {
+                    //if user wins then show the other answer too
+                    iv_numberTwo_answer.setVisibility(View.VISIBLE);
+
+                    //counting user wins
+                    countUserWin += 1;
+                    setTheStar(countUserWin); //assigning stars per User Win
+                    setOwl_flying();
+
+                }
+                if(userAnswer != correct_Answer)
+                {
+                    setOwl_no();
+                    OnImageClick();
+                }*/
+    //isUserCorrect();
 
 }
