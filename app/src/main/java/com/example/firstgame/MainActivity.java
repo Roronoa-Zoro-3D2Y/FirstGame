@@ -1,23 +1,19 @@
 package com.example.firstgame;
 
 import static com.example.firstgame.R.id.iv_star1_body1;
+import static com.example.firstgame.R.id.owl_1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.Random;
 
@@ -31,10 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView iv_numberOne_answer,iv_numberTwo_answer;
 
-    ImageButton replay_btn;
+    ImageView iv_owl,iv_owl_fly,iv_owl_no;
+
+    AnimationDrawable owl_tapping,owl_flying,owl_shaking;
+
+    AppCompatButton replay_btn;
     ImageView gray_1,gray_2,gray_3,gray_4,gray_5;
 
     Dialog displayScore;
+
     private int first_num,second_num,userAnswer,correct_Answer;
 
 
@@ -62,8 +63,17 @@ public class MainActivity extends AppCompatActivity {
             iv_numberOne_answer = findViewById(R.id.number_1_checkbox);
             iv_numberTwo_answer = findViewById(R.id.number_2_checkbox);
 
-
             displayScore = new Dialog(this);
+
+            iv_owl_fly = findViewById(owl_1);
+            iv_owl_fly.setImageResource(R.drawable.owl_flying_in);
+            owl_flying = (AnimationDrawable) iv_owl_fly.getDrawable();
+
+            owl_flying.setOneShot(true);
+            owl_flying.start();
+
+
+
 
 //        Log.d("Testing", "X and y are" + first_num + "  " + second_num);
 
@@ -77,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     }// onCreate ENDS here
+
+  /*  @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        owl_flying.start();
+    }*/
 
     public int chooseRandomNumber(){
         int x;
@@ -166,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
         setNumberImage(first_num, iv_numberOne);
         setNumberImage(second_num, iv_numberTwo);
 
+
     }
+
 
     public void OnImageClick(){
         iv_numberOne.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +202,13 @@ public class MainActivity extends AppCompatActivity {
                     //counting user wins
                     countUserWin += 1;
                     setTheStar(countUserWin); //assigning stars per User Win
+                    setOwl_tapping();
                 }
+                if(userAnswer != correct_Answer)
+                {
+                    owl_tapping.setOneShot(true);
+                    setOwl_no();}
+
 
                 if( countGames <= 5) {
                     Handler myHandler = new Handler();
@@ -197,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                             assignNumbers();
                             assignNumbersToImages();
                             OnImageClick();
+
                         }
                     }, 900);
 
@@ -224,7 +249,12 @@ public class MainActivity extends AppCompatActivity {
                     //counting user wins
                     countUserWin += 1;
                     setTheStar(countUserWin); //assigning stars per User Win
+                    setOwl_tapping();
                 }
+                if(userAnswer != correct_Answer)
+                {
+                    owl_tapping.setOneShot(true);
+                    setOwl_no();}
 
                 if( countGames <= 5) {
                     Handler myHandler = new Handler();
@@ -237,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
                             assignNumbers();
                             assignNumbersToImages();
                             OnImageClick();
+
                         }
                     }, 900);
 
@@ -292,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 restart();
+                displayScore.dismiss();
             }
         });
 
@@ -307,42 +339,21 @@ public class MainActivity extends AppCompatActivity {
         OnImageClick();
     }
 
+    public void setOwl_tapping(){
+            iv_owl = findViewById(R.id.owl_1);
+            iv_owl.setImageResource(R.drawable.owl_tap_animation);
+            owl_tapping = (AnimationDrawable) iv_owl.getDrawable();
+            owl_tapping.setOneShot(true);
+            owl_tapping.start();
+    }
 
+    public void setOwl_no(){
+        iv_owl_no = findViewById(owl_1);
+        iv_owl_no.setImageResource(R.drawable.owl_no_no);
+        owl_shaking = (AnimationDrawable) iv_owl_no.getDrawable();
 
-    // Inside your activity
-/*    public void showCustomDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.activity_display_score, null);
-        builder.setView(dialogView);
+        owl_shaking.start();
 
-        *//*TextView dialogTitle = dialogView.findViewById(R.id.dialog_title);
-        EditText editText = dialogView.findViewById(R.id.edit_text);
-        Button cancelButton = dialogView.findViewById(R.id.dialog_button_cancel);
-        Button okButton = dialogView.findViewById(R.id.dialog_button_ok);
-*//*
-//        dialogTitle.setText("Custom Dialog Title");
-
-        AlertDialog dialog = builder.create();
-
-        *//*cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userInput = editText.getText().toString();
-                // Do something with the user input
-                dialog.dismiss();
-            }
-        });
-*//*
-        dialog.show();
-    }*/
-
+    }
 
 }
