@@ -45,11 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     Dialog displayScore;
 
-    MediaPlayer wordPop,gameFinishedSound,wrongAnswerSound,correctAnswerSound,theQuestionSound;
+    MediaPlayer myMediaPlayer;
 
 
     private int first_num,second_num,userAnswer,correct_Answer,theActualQuestion;
-
 
     public int countGames = 1,countUserWin=0;
 
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
 //        Log.d("Testing", "X and y are" + first_num + "  " + second_num);
 
         //return the game to initial stage
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //FIRST GAME
         assignNumbers();
         assignNumbersToImages();
-        theActualQuestion = set_question();
+        theActualQuestion =(int) set_question();
         OnImageClick();
 
 
@@ -168,23 +168,31 @@ public class MainActivity extends AppCompatActivity {
         if(userAnswer != correct_Answer) {
             setOwl_no();
             OnImageClick();
-            wrongAnswerSound = MediaPlayer.create(this,R.raw.not_this_one);
-            wrongAnswerSound.start();
+            myMediaPlayer = MediaPlayer.create(this,R.raw.not_this_one);
+            myMediaPlayer.start();
+
         }
         else {
             iv_numberOne_answer.setVisibility(View.VISIBLE);
             iv_numberTwo_answer.setVisibility(View.VISIBLE);
 
-            correctAnswerSound = MediaPlayer.create(this,R.raw.huhuump3);
-            correctAnswerSound.start();
+//            correctAnswerSound = MediaPlayer.create(this,R.raw.huhuump3);
+//            correctAnswerSound.start();
 
             //owl happy
-
+            /*myMediaPlayer = MediaPlayer.create(this,R.raw.huhuump3);
+            myMediaPlayer.start();*/
+            if(myMediaPlayer!=null) {
+                myMediaPlayer.stop();
+                myMediaPlayer.release();
+            }
             setOwl_flying();
 
             //set Star
             countUserWin += 1;
             setTheStar(countUserWin);
+
+            int red_col = R.color.red;
 
             if( countUserWin < 5) {
                 Handler myHandler = new Handler();
@@ -196,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         caterpillar_happy.setOneShot(false);
                         assignNumbers();
                         assignNumbersToImages();
-                        theActualQuestion = set_question();
+                        theActualQuestion = (int)set_question();
                         OnImageClick();
 
                     }
@@ -206,8 +214,6 @@ public class MainActivity extends AppCompatActivity {
 
             if(countUserWin >= 5) {
                 Log.d("Tag20202","<<--Here2-->>") ;
-                gameFinishedSound = MediaPlayer.create(this,R.raw.clap);
-                gameFinishedSound.start();
                 DisplayScore();
              }
         }//else ends
@@ -216,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
     public int theBiggestOfTwo(){
         int biggest=second_num;
+
         if(first_num > second_num){
             biggest = first_num;
             iv_numberOne_answer.setImageResource(R.drawable.tick_mark);
@@ -228,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
         return biggest;
     }
     public int theSmallestOfTwo(){
+
         int smallest  = second_num;
         if(first_num < second_num){
             smallest = first_num;
@@ -269,8 +277,12 @@ public class MainActivity extends AppCompatActivity {
         setNumberImage(first_num, iv_numberOne);
         setNumberImage(second_num, iv_numberTwo);
 
-        wordPop = MediaPlayer.create(this,R.raw.wordpop);
-        wordPop.start();
+        myMediaPlayer = MediaPlayer.create(this,R.raw.wordpop);
+        myMediaPlayer.start();
+
+        iv_numberOne.setClickable(false);
+        iv_numberTwo.setClickable(false);
+
     }
     public void getNumAndAssign(){
         do {
@@ -281,22 +293,22 @@ public class MainActivity extends AppCompatActivity {
 
         setOwl_tapping();
         iv_numberOne.setImageResource(mapNumToImageNum[first_num]);
-        iv_numberTwo.setImageResource(mapNumToImageNum[second_num]);
-
-        wordPop = MediaPlayer.create(this,R.raw.wordpop);
-        wordPop.start();
+        iv_numberTwo.setImageResource(mapNumToImageNum[second_num]);;
     }
 
     public void OnImageClick(){
 
-        iv_numberOne.setClickable(true);
-        iv_numberTwo.setClickable(true);
+
         iv_numberOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userAnswer = first_num;
-                if((R.raw.which_one_is_bigger) == theActualQuestion)
+
+                if(0 == theActualQuestion){
+
                     correct_Answer = theBiggestOfTwo();
+                }
+
                 else
                     correct_Answer = theSmallestOfTwo();
 
@@ -312,13 +324,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 userAnswer = second_num;
-                correct_Answer = theBiggestOfTwo();
-
-                if((R.raw.which_one_is_bigger)== theActualQuestion)
+                if(0 == theActualQuestion)
                     correct_Answer = theBiggestOfTwo();
                 else
                     correct_Answer = theSmallestOfTwo();
-
                 iv_numberTwo_answer.setVisibility(View.VISIBLE);
                 isUserCorrect();
 
@@ -338,6 +347,11 @@ public class MainActivity extends AppCompatActivity {
     public void DisplayScore() {
 //        Log.d("Tag20202","<<--Here3-->>") ;
         int i = 1;
+
+        if(displayScore!=null){
+            displayScore.dismiss();
+            displayScore = null;
+        }
 
         displayScore = new Dialog(this);
         displayScore.setContentView(R.layout.activity_display_score);
@@ -375,22 +389,24 @@ public class MainActivity extends AppCompatActivity {
         replay_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                restart();
                 displayScore.dismiss();
+                restart();
             }
         });
 
-        displayScore.show();
+        if(!displayScore.isShowing())
+            displayScore.show();
     }
 
 
 
     public void restart(){
         countUserWin = 0;
+
         initializeStarsAnswers();
         assignNumbers();
         assignNumbersToImages();
-        theActualQuestion = set_question();
+        theActualQuestion = (int) set_question();
         OnImageClick();
     }
 
@@ -409,6 +425,9 @@ public class MainActivity extends AppCompatActivity {
         owl_shaking.setOneShot(true);
         owl_shaking.start();
 
+        myMediaPlayer = MediaPlayer.create(this,R.raw.not_this_one);
+        myMediaPlayer.start();
+
     }
 
     public void setCaterpillar_happy(){
@@ -421,29 +440,38 @@ public class MainActivity extends AppCompatActivity {
 
     public void setOwl_flying(){
         int temp = 5;
-        while(temp != 0) {
             iv_owl_fly = findViewById(owl_1);
             iv_owl_fly.setImageResource(R.drawable.owl_flying_in);
             owl_flying = (AnimationDrawable) iv_owl_fly.getDrawable();
             owl_flying.setOneShot(true);
             owl_flying.start();
-            temp --;
-        }
+
+            myMediaPlayer = MediaPlayer.create(this,R.raw.clap);
+            myMediaPlayer.start();
+
 
     }
 
-    public int set_question(){
+    public long set_question(){
+        Random random = new Random();
+        long i;
+        i = random.nextInt(2);
 
-        iv_numberOne.setClickable(false);
-        iv_numberTwo.setClickable(false);
 
-        MySounds.add(R.raw.which_one_is_bigger);
-        MySounds.add(R.raw.which_one_is_smaller);
 
-        Collections.shuffle(MySounds);
-        theQuestionSound = MediaPlayer.create(this,MySounds.get(0));
-        theQuestionSound.start();
-        return MySounds.get(0);
+        if(i == 0){
+            myMediaPlayer = MediaPlayer.create(this,R.raw.which_one_is_bigger);
+            myMediaPlayer.start();
+        }
+        else {
+            myMediaPlayer = MediaPlayer.create(this,R.raw.which_one_is_smaller);
+            myMediaPlayer.start();
+        }
+
+        iv_numberOne.setClickable(true);
+        iv_numberTwo.setClickable(true);
+
+        return i;
     }
 
 
